@@ -1,4 +1,4 @@
-package walletmanager;
+package walletmanager.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

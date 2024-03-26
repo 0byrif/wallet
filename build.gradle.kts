@@ -32,6 +32,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     implementation ("org.liquibase:liquibase-core")
+    implementation ("org.springframework.boot:spring-boot-starter-validation")
 
 }
 

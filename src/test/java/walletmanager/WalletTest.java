@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -11,6 +13,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import walletmanager.controller.WalletController;
+import walletmanager.model.WalletRequest;
 import walletmanager.service.WalletService;
 
 import java.math.BigDecimal;
@@ -26,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @SpringBootTest
+@AutoConfigureMockMvc
 public class WalletTest {
 
     @InjectMocks
@@ -34,7 +38,11 @@ public class WalletTest {
     @Mock
     private WalletService service;
 
+    @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper om;
 
     @BeforeEach
     public void setup() {
@@ -54,8 +62,8 @@ public class WalletTest {
 
         mockMvc.perform(post("/api/v1/wallet")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(request)))
-                .andExpect(status().isOk());
+                        .content(om.writeValueAsString(request)))
+                        .andExpect(status().isOk());
 
         verify(service, times(1)).updateBalance(walletId, amount, operationType);
     }
@@ -69,8 +77,8 @@ public class WalletTest {
 
         mockMvc.perform(get("/api/v1/wallet/" + walletId)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json(new ObjectMapper().writeValueAsString(balance)));
+                        .andExpect(status().isOk())
+                        .andExpect(content().json(om.writeValueAsString(balance)));
 
         verify(service, times(1)).getBalance(walletId);
     }
